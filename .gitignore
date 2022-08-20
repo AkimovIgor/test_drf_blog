@@ -3,6 +3,6 @@
 .venv/
 node_modules/
 **/__pycache__/
-/blog/static/
-/blog/.env
+/api/static/
+.env
 *.sqlite3
