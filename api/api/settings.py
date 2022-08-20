@@ -27,7 +27,7 @@ environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = env('SECRET_KEY')
+SECRET_KEY = env('SECRET_KEY', default="unsafe-secret-key")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = env('DEBUG', default=False)
@@ -44,8 +44,12 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'rest_framework'
-    'core'
+    'rest_framework',
+    'core',
+    'ckeditor',
+    'ckeditor_uploader',
+    'taggit',
+    'taggit_serializer',
 ]
 
 MIDDLEWARE = [
@@ -160,6 +164,17 @@ REST_FRAMEWORK = {
     ],
     'TEST_REQUEST_DEFAULT_FORMAT': 'json',
     'DEFAULT_PERMISSION_CLASSES': (
-        'rest_framework.permission.DjangoModelPermission'
+        'rest_framework.permissions.DjangoModelPermissions'
     )
 }
+
+# Ckeditor settings
+
+CKEDITOR_UPLOAD_PATH = env('CKEDITOR_UPLOAD_PATH')
+
+CKEDITOR_JQUERY_URL = env('CKEDITOR_JQUERY_URL')
+
+CKEDITOR_IMAGE_BACKEND = env('CKEDITOR_IMAGE_BACKEND')
+
+CKEDITOR_CONFIGS = env('CKEDITOR_CONFIGS')
+
