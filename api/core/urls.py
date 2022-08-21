@@ -11,6 +11,7 @@ urlpatterns = [
     path('last_posts', LastPostsList.as_view()),
     path('feedback', FeedBack.as_view()),
     path('register', Register.as_view()),
+    path('profile', Profile.as_view()),
 ]
 
 urlpatterns = format_suffix_patterns(urlpatterns)

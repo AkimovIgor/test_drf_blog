@@ -4,6 +4,7 @@ from rest_framework import mixins
 from rest_framework import generics
 from rest_framework import filters
 from rest_framework.response import Response
+from rest_framework import permissions
 from .permissions import AllowedMethods
 from .pagination import PageNumberSetPagination
 from taggit.models import Tag
@@ -122,6 +123,23 @@ class Register(generics.GenericAPIView):
         serializer.is_valid(raise_exception=True)
         user = serializer.save()
         return Response({
-            'user': UserSerializer(user, context=self.get_serializer_context()).data,
+            'user': UserSerializer(
+                user,
+                context=self.get_serializer_context()
+            ).data,
             'message': 'Пользователь успешно создан'
+        })
+
+
+class Profile(generics.GenericAPIView):
+
+    permission_classes = [permissions.IsAuthenticated]
+    serializer_class = UserSerializer
+
+    def get(self, request, *args, **kwargs):
+        return Response({
+            'user': UserSerializer(
+                request.user,
+                context=self.get_serializer_context()
+            ).data,
         })
