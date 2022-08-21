@@ -2,6 +2,7 @@ from .serializers import PostSerializer
 from .models import Post
 from rest_framework import mixins
 from rest_framework import generics
+from .permissions import AllowedMethods
 
 
 class PostList(mixins.ListModelMixin,
@@ -11,6 +12,7 @@ class PostList(mixins.ListModelMixin,
     queryset = Post.objects.all()
     serializer_class = PostSerializer
     lookup_field = 'slug'
+    permission_classes = [AllowedMethods]
 
     def get(self, request, *args, **kwargs):
         return self.list(request, *args, **kwargs)
@@ -27,6 +29,7 @@ class PostDetail(mixins.RetrieveModelMixin,
     queryset = Post.objects.all()
     serializer_class = PostSerializer
     lookup_field = 'slug'
+    permission_classes = [AllowedMethods]
 
     def get(self, request, *args, **kwargs):
         return self.retrieve(request, *args, **kwargs)

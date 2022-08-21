@@ -4,5 +4,7 @@
 node_modules/
 **/__pycache__/
 /api/static/
+/api/media/
 api/.env
+
 *.sqlite3
