@@ -33,3 +33,11 @@ class TagSerializer(serializers.ModelSerializer):
         extra_kwargs = {
             'url': {'lookup_field': 'name'}
         }
+
+
+class ContactSerializer(serializers.Serializer):
+
+    name = serializers.CharField(required=True)
+    email = serializers.EmailField(required=True)
+    subject = serializers.CharField()
+    message = serializers.CharField(required=True)

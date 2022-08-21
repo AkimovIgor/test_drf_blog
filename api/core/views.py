@@ -1,12 +1,15 @@
-from .serializers import PostSerializer, TagSerializer
+from .serializers import PostSerializer, TagSerializer, ContactSerializer
 from .models import Post
 from rest_framework import mixins
 from rest_framework import generics
+from rest_framework.response import Response
 from .permissions import AllowedMethods
 from .pagination import PageNumberSetPagination
 from taggit.models import Tag
 from django.core.exceptions import ObjectDoesNotExist
 from django.http.response import Http404
+from django.core.mail import send_mail
+from django.conf import settings
 
 
 class PostList(mixins.ListModelMixin,
@@ -82,3 +85,25 @@ class LastPostsList(mixins.ListModelMixin, generics.GenericAPIView):
 
     def get(self, request, *args, **kwargs):
         return self.list(request, *args, **kwargs)
+
+
+class FeedBack(mixins.CreateModelMixin, generics.GenericAPIView):
+
+    serializer_class = ContactSerializer
+    permission_classes = [AllowedMethods]
+
+    def post(self, request, *args, **kwargs):
+        serializer = ContactSerializer(data=request.data)
+        if serializer.is_valid():
+            data = serializer.validated_data
+            name = data.get('name')
+            email = data.get('email')
+            subject = data.get('subject')
+            message = data.get('message')
+            send_mail(f'От {name} | {subject}', message, email, [
+                settings.EMAIL_HOST_USER
+            ])
+            response_data = {'success': 'Sent'}
+        else:
+            response_data = {'success': 'False', 'errors': serializer.errors}
+        return Response(response_data)

@@ -9,6 +9,7 @@ urlpatterns = [
     path('tags', TagList.as_view()),
     path('tags/<slug:tag_slug>', TagDetail.as_view()),
     path('last_posts', LastPostsList.as_view()),
+    path('feedback', FeedBack.as_view()),
 ]
 
 urlpatterns = format_suffix_patterns(urlpatterns)
