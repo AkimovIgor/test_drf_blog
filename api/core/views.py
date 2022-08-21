@@ -3,16 +3,18 @@ from .models import Post
 from rest_framework import mixins
 from rest_framework import generics
 from .permissions import AllowedMethods
+from .pagination import PageNumberSetPagination
 
 
 class PostList(mixins.ListModelMixin,
                mixins.CreateModelMixin,
                generics.GenericAPIView):
 
-    queryset = Post.objects.all()
+    queryset = Post.objects.all().order_by('-created_at')
     serializer_class = PostSerializer
     lookup_field = 'slug'
     permission_classes = [AllowedMethods]
+    pagination_class = PageNumberSetPagination
 
     def get(self, request, *args, **kwargs):
         return self.list(request, *args, **kwargs)
