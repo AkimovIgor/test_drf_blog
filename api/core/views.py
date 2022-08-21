@@ -72,3 +72,13 @@ class TagList(mixins.ListModelMixin, generics.GenericAPIView):
 
     def get(self, request, *args, **kwargs):
         return self.list(request, *args, **kwargs)
+
+
+class LastPostsList(mixins.ListModelMixin, generics.GenericAPIView):
+
+    serializer_class = PostSerializer
+    queryset = Post.objects.all().order_by('-id')[:5]
+    permission_classes = [AllowedMethods]
+
+    def get(self, request, *args, **kwargs):
+        return self.list(request, *args, **kwargs)
