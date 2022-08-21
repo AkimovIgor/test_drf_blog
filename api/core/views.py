@@ -2,6 +2,7 @@ from .serializers import PostSerializer, TagSerializer, ContactSerializer
 from .models import Post
 from rest_framework import mixins
 from rest_framework import generics
+from rest_framework import filters
 from rest_framework.response import Response
 from .permissions import AllowedMethods
 from .pagination import PageNumberSetPagination
@@ -21,6 +22,8 @@ class PostList(mixins.ListModelMixin,
     lookup_field = 'slug'
     permission_classes = [AllowedMethods]
     pagination_class = PageNumberSetPagination
+    search_fields = ['content', 'header']
+    filter_backends = (filters.SearchFilter,)
 
     def get(self, request, *args, **kwargs):
         return self.list(request, *args, **kwargs)
