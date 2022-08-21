@@ -4,6 +4,9 @@ from rest_framework import mixins
 from rest_framework import generics
 from .permissions import AllowedMethods
 from .pagination import PageNumberSetPagination
+from taggit.models import Tag
+from django.core.exceptions import ObjectDoesNotExist
+from django.http.response import Http404
 
 
 class PostList(mixins.ListModelMixin,
@@ -41,3 +44,21 @@ class PostDetail(mixins.RetrieveModelMixin,
 
     def delete(self, request, *args, **kwargs):
         return self.destroy(request, *args, **kwargs)
+
+
+class TagDetail(mixins.ListModelMixin, generics.GenericAPIView):
+
+    serializer_class = PostSerializer
+    permission_classes = [AllowedMethods]
+    pagination_class = PageNumberSetPagination
+
+    def get_queryset(self):
+        tag_slug = self.kwargs['tag_slug'].lower()
+        try:
+            tag = Tag.objects.get(slug=tag_slug)
+        except ObjectDoesNotExist:
+            raise Http404
+        return Post.objects.filter(tags=tag)
+
+    def get(self, request, *args, **kwargs):
+        return self.list(request, *args, **kwargs)
