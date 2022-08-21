@@ -1,11 +1,12 @@
 from django.urls import path
 from rest_framework.urlpatterns import format_suffix_patterns
-from .views import PostList, PostDetail, TagDetail
+from .views import *
 
 
 urlpatterns = [
     path('posts', PostList.as_view()),
     path('posts/<slug:slug>', PostDetail.as_view()),
+    path('tags', TagList.as_view()),
     path('tags/<slug:tag_slug>', TagDetail.as_view()),
 ]
 

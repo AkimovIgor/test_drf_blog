@@ -1,4 +1,4 @@
-from .serializers import PostSerializer
+from .serializers import PostSerializer, TagSerializer
 from .models import Post
 from rest_framework import mixins
 from rest_framework import generics
@@ -59,6 +59,16 @@ class TagDetail(mixins.ListModelMixin, generics.GenericAPIView):
         except ObjectDoesNotExist:
             raise Http404
         return Post.objects.filter(tags=tag)
+
+    def get(self, request, *args, **kwargs):
+        return self.list(request, *args, **kwargs)
+
+
+class TagList(mixins.ListModelMixin, generics.GenericAPIView):
+
+    serializer_class = TagSerializer
+    queryset = Tag.objects.all()
+    permission_classes = [AllowedMethods]
 
     def get(self, request, *args, **kwargs):
         return self.list(request, *args, **kwargs)
