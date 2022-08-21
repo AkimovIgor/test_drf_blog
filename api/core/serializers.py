@@ -41,3 +41,37 @@ class ContactSerializer(serializers.Serializer):
     email = serializers.EmailField(required=True)
     subject = serializers.CharField()
     message = serializers.CharField(required=True)
+
+
+class RegisterSerializer(serializers.ModelSerializer):
+
+    password_confirm = serializers.CharField(write_only=True)
+
+    class Meta:
+
+        model = User
+        fields = [
+            'username',
+            'password',
+            'password_confirm',
+        ]
+        extra_kwargs = {'password': {'write_only': True}}
+
+    def create(self, validated_data):
+        username = validated_data['username']
+        password = validated_data['password']
+        password_confirm = validated_data['password_confirm']
+        if password != password_confirm:
+            raise serializers.ValidationError({'password': 'Пароли не совпадают'})
+        user = User(username=username)
+        user.set_password(password)
+        user.save()
+        return user
+
+
+class UserSerializer(serializers.ModelSerializer):
+
+    class Meta:
+
+        model = User
+        fields = '__all__'
