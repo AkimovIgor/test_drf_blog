@@ -143,3 +143,30 @@ class Profile(generics.GenericAPIView):
                 context=self.get_serializer_context()
             ).data,
         })
+
+
+class CommentList(generics.ListAPIView):
+
+    serializer_class = CommentSerializer
+    queryset = Comment.objects.all()
+    permission_classes = [permissions.AllowAny]
+
+    def get_queryset(self):
+        post_slug = self.kwargs['post_slug'].lower()
+        try:
+            post = Post.objects.get(slug=post_slug)
+        except ObjectDoesNotExist:
+            raise Http404
+        return Comment.objects.filter(post=post)
+
+    def get(self, request, *args, **kwargs):
+        return self.list(request, *args, **kwargs)
+
+
+class CommentSent(mixins.CreateModelMixin, generics.GenericAPIView):
+
+    serializer_class = CommentSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def post(self, request, *args, **kwargs):
+        return self.create(request, *args, **kwargs)

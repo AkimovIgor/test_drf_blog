@@ -12,6 +12,8 @@ urlpatterns = [
     path('feedback', FeedBack.as_view()),
     path('register', Register.as_view()),
     path('profile', Profile.as_view()),
+    path('comments', CommentSent.as_view()),
+    path('comments/<slug:post_slug>', CommentList.as_view()),
 ]
 
 urlpatterns = format_suffix_patterns(urlpatterns)
